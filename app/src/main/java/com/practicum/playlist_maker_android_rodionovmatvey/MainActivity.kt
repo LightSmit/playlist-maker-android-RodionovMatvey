@@ -1,4 +1,4 @@
-package com.practicum.playlist_maker_android_rodionovmatvey
+package com.practicum.playlist-maker-android-rodionovmatvey
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
