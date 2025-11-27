@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">playlist-maker-android-RodionovMatvey</string>
+    <string name="settings_title">Настройки</string>
+    <string name="dark_theme" translatable="false">Тёмная тема</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="write_to_support">Написать в поддержку</string>
+    <string name="user_agreement">Пользовательское соглашение</string>
+
+    <!-- Для шеринга -->
+    <string name="share_message">Скачайте приложение Playlist Maker!</string>
+
+    <!-- Для письма разработчикам -->
+    <string name="support_email_address">ТВОЙ_EMAIL@пример.ру</string>
+    <string name="support_email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="support_email_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+
+    <!-- Ссылка на оферту Практикума -->
+    <string name="offer_url">https://practicum.yandex.ru/legal-oferta/</string>
 </resources>
