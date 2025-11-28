@@ -9,7 +9,6 @@ val YandexSans = FontFamily(
     Font(R.font.yandex_sans_display_bold)
 )
 
-// Типографика — теперь вся использует твой шрифт
 val Typography = Typography(
     bodyLarge = androidx.compose.ui.text.TextStyle(
         fontFamily = YandexSans

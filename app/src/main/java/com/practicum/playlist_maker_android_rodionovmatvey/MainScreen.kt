@@ -25,7 +25,6 @@ fun MainScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Синий хедер
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -41,11 +40,10 @@ fun MainScreen(
             )
         }
 
-        // Белый блок с пунктами меню
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .offset(y = (-24).dp) // чтобы "наезжало" на синий бар
+                .offset(y = (-24).dp)
                 .background(Color.White)
                 .padding(top = 24.dp)
         ) {
