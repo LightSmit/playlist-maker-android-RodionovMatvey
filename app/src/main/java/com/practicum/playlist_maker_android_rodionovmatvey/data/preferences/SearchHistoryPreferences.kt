@@ -15,9 +15,9 @@ class SearchHistoryPreferences(
     private val coroutineScope: CoroutineScope = CoroutineScope(
         CoroutineName("search-history-preferences") + SupervisorJob()
     )
-) {
+) : SearchHistoryStorage {
 
-    fun addEntry(word: String) {
+    override fun addEntry(word: String) {
         val normalizedWord = word.trim()
 
         if (normalizedWord.isEmpty()) {
@@ -45,7 +45,7 @@ class SearchHistoryPreferences(
         }
     }
 
-    suspend fun getEntries(): List<String> {
+    override suspend fun getEntries(): List<String> {
         val preferences = dataStore.data.first()
         val historyString = preferences[SEARCH_HISTORY_KEY].orEmpty()
 

@@ -7,7 +7,6 @@ import com.practicum.playlist_maker_android_rodionovmatvey.data.dto.TrackDto
 import com.practicum.playlist_maker_android_rodionovmatvey.data.dto.TracksSearchRequest
 import com.practicum.playlist_maker_android_rodionovmatvey.data.dto.TracksSearchResponse
 import com.practicum.playlist_maker_android_rodionovmatvey.domain.NetworkClient
-import com.practicum.playlist_maker_android_rodionovmatvey.domain.Resource
 import com.practicum.playlist_maker_android_rodionovmatvey.domain.TracksRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -20,7 +19,7 @@ class TracksRepositoryImpl(
     private val trackDao: TrackDao
 ) : TracksRepository {
 
-    override suspend fun searchTracks(expression: String): Resource<List<Track>> {
+    override suspend fun searchTracks(expression: String): Result<List<Track>> {
         val response = networkClient.doRequest(
             TracksSearchRequest(expression = expression.trim())
         )
@@ -43,12 +42,12 @@ class TracksRepositoryImpl(
                     actualTrack
                 }
 
-                Resource.Success(tracks)
+                Result.success(tracks)
             }
 
             else -> {
-                Resource.Error(
-                    response.errorMessage ?: "Ошибка сервера"
+                Result.failure(
+                    Exception(response.errorMessage ?: "Ошибка сервера")
                 )
             }
         }

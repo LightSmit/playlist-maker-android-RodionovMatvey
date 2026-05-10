@@ -1,6 +1,5 @@
 package com.practicum.playlist_maker_android_rodionovmatvey
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.practicum.playlist_maker_android_rodionovmatvey.data.network.Playlist
+import java.io.File
 
 @Composable
 fun PlaylistListItem(
@@ -59,7 +59,7 @@ fun PlaylistListItem(
         ) {
             if (playlist.coverImageUri != null) {
                 AsyncImage(
-                    model = Uri.parse(playlist.coverImageUri),
+                    model = File(playlist.coverImageUri),
                     contentDescription = playlist.name,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -69,9 +69,7 @@ fun PlaylistListItem(
                     imageVector = Icons.Filled.LibraryMusic,
                     contentDescription = playlist.name,
                     colorFilter = ColorFilter.tint(Color.Gray),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp)
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }

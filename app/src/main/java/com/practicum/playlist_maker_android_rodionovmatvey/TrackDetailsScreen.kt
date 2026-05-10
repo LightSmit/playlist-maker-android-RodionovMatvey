@@ -27,7 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,9 +54,9 @@ fun TrackDetailsScreen(
 ) {
     val track by Creator.getTracksRepository()
         .getTrackById(trackId)
-        .collectAsState(initial = null)
+        .collectAsStateWithLifecycle(initialValue = null)
 
-    val playlists by playlistsViewModel.playlists.collectAsState(initial = emptyList())
+    val playlists by playlistsViewModel.playlists.collectAsStateWithLifecycle(initialValue = emptyList())
 
     var showBottomSheet by remember { mutableStateOf(false) }
 

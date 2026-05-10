@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist_maker_android_rodionovmatvey.Creator
-import com.practicum.playlist_maker_android_rodionovmatvey.domain.Resource
 import com.practicum.playlist_maker_android_rodionovmatvey.domain.SearchHistoryRepository
 import com.practicum.playlist_maker_android_rodionovmatvey.domain.TracksRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@OptIn(FlowPreview::class)
 class SearchViewModel(
     private val tracksRepository: TracksRepository,
     private val searchHistoryRepository: SearchHistoryRepository
@@ -30,6 +31,8 @@ class SearchViewModel(
     val searchHistory = _searchHistory.asStateFlow()
 
     private val searchQuery = MutableStateFlow("")
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
 
     private var searchJob: Job? = null
     private var lastFailedQuery: String = ""
@@ -39,7 +42,7 @@ class SearchViewModel(
 
         searchJob = viewModelScope.launch {
             searchQuery
-                .debounce(500)
+                .debounce(SEARCH_DEBOUNCE_DELAY_MS)
                 .distinctUntilChanged()
                 .collectLatest { query ->
                     if (query.isBlank()) {
@@ -53,9 +56,9 @@ class SearchViewModel(
     }
 
     fun onSearchTextChanged(query: String) {
+        _searchText.value = query
         searchQuery.value = query
     }
-
     fun retrySearch() {
         if (lastFailedQuery.isNotBlank()) {
             viewModelScope.launch {
@@ -65,12 +68,9 @@ class SearchViewModel(
     }
 
     fun clear() {
+        _searchText.value = ""
         searchQuery.value = ""
         _searchScreenState.update { SearchState.Initial }
-    }
-
-    fun refreshHistory() {
-        loadSearchHistory()
     }
 
     private fun loadSearchHistory() {
@@ -81,25 +81,15 @@ class SearchViewModel(
     }
 
     private suspend fun doSearch(query: String) {
-        val normalizedQuery = query.trim()
-
-        if (normalizedQuery.isBlank()) {
-            _searchScreenState.update { SearchState.Initial }
-            return
-        }
-
         _searchScreenState.update { SearchState.Searching }
 
         val result = withContext(Dispatchers.IO) {
-            tracksRepository.searchTracks(normalizedQuery)
+            tracksRepository.searchTracks(query)
         }
 
-        when (result) {
-            is Resource.Success -> {
-                val tracks = result.data
-
-                searchHistoryRepository.addEntry(normalizedQuery)
-                updateHistoryInMemory(normalizedQuery)
+        result
+            .onSuccess { tracks ->
+                saveSearchHistoryEntry(query)
 
                 _searchScreenState.update {
                     if (tracks.isEmpty()) {
@@ -109,14 +99,23 @@ class SearchViewModel(
                     }
                 }
             }
-
-            is Resource.Error -> {
-                lastFailedQuery = normalizedQuery
+            .onFailure { error ->
+                lastFailedQuery = query
                 _searchScreenState.update {
-                    SearchState.Fail(result.message)
+                    SearchState.Fail(error.message ?: "Ошибка сервера")
                 }
             }
+    }
+
+    private fun saveSearchHistoryEntry(query: String) {
+        val normalizedQuery = query.trim()
+
+        if (normalizedQuery.isEmpty()) {
+            return
         }
+
+        searchHistoryRepository.addEntry(normalizedQuery)
+        updateHistoryInMemory(normalizedQuery)
     }
 
     private fun updateHistoryInMemory(query: String) {
@@ -148,3 +147,4 @@ class SearchViewModel(
             }
     }
 }
+private const val SEARCH_DEBOUNCE_DELAY_MS = 500L

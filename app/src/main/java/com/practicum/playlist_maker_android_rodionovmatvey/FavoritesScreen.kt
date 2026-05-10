@@ -21,7 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +39,7 @@ fun FavoritesScreen(
     onTrackClick: (Long) -> Unit,
     playlistsViewModel: PlaylistsViewModel = viewModel()
 ) {
-    val favoriteList by playlistsViewModel.favoriteList.collectAsState(initial = emptyList())
+    val favoriteList by playlistsViewModel.favoriteList.collectAsStateWithLifecycle(initialValue = emptyList())
 
     Column(
         modifier = Modifier
@@ -74,7 +74,11 @@ fun FavoritesScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(favoriteList) { track ->
+                items(
+                    items = favoriteList,
+                    key = { track -> track.id },
+                    contentType = { "favorite_track" }
+                ) { track ->
                     TrackListItem(
                         track = track,
                         onClick = {

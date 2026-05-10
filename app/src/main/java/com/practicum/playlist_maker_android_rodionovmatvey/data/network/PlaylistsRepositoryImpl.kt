@@ -1,5 +1,6 @@
 package com.practicum.playlist_maker_android_rodionovmatvey.data.network
 
+import kotlinx.coroutines.flow.distinctUntilChanged
 import com.practicum.playlist_maker_android_rodionovmatvey.data.db.PlaylistDao
 import com.practicum.playlist_maker_android_rodionovmatvey.data.db.PlaylistEntity
 import com.practicum.playlist_maker_android_rodionovmatvey.data.db.TrackDao
@@ -16,19 +17,19 @@ class PlaylistsRepositoryImpl(
 
     override fun getPlaylist(playlistId: Long): Flow<Playlist?> {
         return combine(
-            playlistDao.getPlaylistById(playlistId),
-            trackDao.getTracksByPlaylistId(playlistId)
+            playlistDao.getPlaylistById(playlistId).distinctUntilChanged(),
+            trackDao.getTracksByPlaylistId(playlistId).distinctUntilChanged()
         ) { playlistEntity, trackEntities ->
             playlistEntity?.toPlaylist(
                 tracks = trackEntities.map { it.toTrack() }
             )
-        }
+        }.distinctUntilChanged()
     }
 
     override fun getAllPlaylists(): Flow<List<Playlist>> {
         return combine(
-            playlistDao.getAllPlaylists(),
-            trackDao.getAllTracks()
+            playlistDao.getAllPlaylists().distinctUntilChanged(),
+            trackDao.getAllTracks().distinctUntilChanged()
         ) { playlistEntities, trackEntities ->
             playlistEntities.map { playlistEntity ->
                 playlistEntity.toPlaylist(
@@ -37,7 +38,7 @@ class PlaylistsRepositoryImpl(
                         .map { it.toTrack() }
                 )
             }
-        }
+        }.distinctUntilChanged()
     }
 
     override suspend fun addNewPlaylist(

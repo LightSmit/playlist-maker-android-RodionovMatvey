@@ -1,5 +1,6 @@
 package com.practicum.playlist_maker_android_rodionovmatvey
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
@@ -40,10 +39,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.practicum.playlist_maker_android_rodionovmatvey.data.network.Track
 import com.practicum.playlist_maker_android_rodionovmatvey.ui.search.TrackListItem
+import java.io.File
 
 @Composable
 fun PlaylistDetailsScreen(
@@ -52,7 +53,7 @@ fun PlaylistDetailsScreen(
     navigateToTrack: (Long) -> Unit = {},
     playlistsViewModel: PlaylistsViewModel = viewModel()
 ) {
-    val playlists by playlistsViewModel.playlists.collectAsState(initial = emptyList())
+    val playlists by playlistsViewModel.playlists.collectAsStateWithLifecycle(initialValue = emptyList())
     val playlist = playlists.find { it.id == playlistId }
 
     var trackToDelete by remember { mutableStateOf<Track?>(null) }
@@ -93,9 +94,11 @@ fun PlaylistDetailsScreen(
         tracksCount
     )
 
-    val totalMinutes = playlist.tracks.sumOf {
-        parseTrackTimeToSeconds(it.trackTime)
-    } / 60
+    val totalMinutes = remember(playlist.tracks) {
+        playlist.tracks.sumOf {
+            parseTrackTimeToSeconds(it.trackTime)
+        } / 60
+    }
 
     val minutesText = pluralStringResource(
         id = R.plurals.minutes_count,
@@ -112,6 +115,8 @@ fun PlaylistDetailsScreen(
             tracksCountText
         )
     }
+
+    val coverUrl = playlist.coverImageUri
 
     LazyColumn(
         modifier = Modifier
@@ -130,7 +135,7 @@ fun PlaylistDetailsScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             AsyncImage(
-                model = playlist.coverImageUri?.let { android.net.Uri.parse(it) },
+                model = coverUrl?.let { File(it) },
                 contentDescription = playlist.name,
                 placeholder = painterResource(id = R.drawable.ic_music),
                 error = painterResource(id = R.drawable.ic_music),
@@ -140,7 +145,7 @@ fun PlaylistDetailsScreen(
                     .fillMaxWidth()
                     .height(280.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.LightGray)
+                    .background(androidx.compose.ui.graphics.Color.LightGray)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -189,7 +194,11 @@ fun PlaylistDetailsScreen(
             }
         }
 
-        items(playlist.tracks) { track ->
+        items(
+            items = playlist.tracks,
+            key = { track -> track.id },
+            contentType = { "track" }
+        ) { track ->
             TrackListItem(
                 track = track,
                 onClick = { navigateToTrack(track.id) },
@@ -197,7 +206,6 @@ fun PlaylistDetailsScreen(
                     trackToDelete = track
                 }
             )
-
             HorizontalDivider(thickness = 0.5.dp)
         }
     }

@@ -1,6 +1,5 @@
 package com.practicum.playlist_maker_android_rodionovmatvey
 
-import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import java.io.File
 
 @Composable
 fun CreatePlaylistScreen(
@@ -60,22 +59,9 @@ fun CreatePlaylistScreen(
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
-        if (uri != null) {
-            try {
-                context.contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-            } catch (_: SecurityException) {
-                // Разрешение могло быть уже выдано.
-            }
-
-            coverImageUri = uri.toString()
+        uri?.let {
+            coverImageUri = savePlaylistCoverToInternalStorage(context, it)
         }
-    }
-
-    fun openImagePicker() {
-        imagePickerLauncher.launch(arrayOf("image/*"))
     }
 
     Column(
@@ -112,13 +98,15 @@ fun CreatePlaylistScreen(
             modifier = Modifier
                 .size(205.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .clickable { openImagePicker() }
+                .clickable {
+                    imagePickerLauncher.launch(arrayOf("image/*"))
+                }
                 .align(Alignment.CenterHorizontally),
             contentAlignment = Alignment.Center
         ) {
             if (coverImageUri != null) {
                 AsyncImage(
-                    model = Uri.parse(coverImageUri),
+                    model = coverImageUri?.let { File(it) },
                     contentDescription = stringResource(R.string.playlist_cover),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -182,5 +170,35 @@ fun CreatePlaylistScreen(
                 fontWeight = FontWeight.Bold
             )
         }
+    }
+}
+
+private fun savePlaylistCoverToInternalStorage(
+    context: android.content.Context,
+    sourceUri: Uri
+): String? {
+    return try {
+        val coversDir = File(context.filesDir, "playlist_covers")
+        if (!coversDir.exists()) {
+            coversDir.mkdirs()
+        }
+
+        val coverFile = File(
+            coversDir,
+            "playlist_cover_${System.currentTimeMillis()}.jpg"
+        )
+
+        val inputStream = context.contentResolver.openInputStream(sourceUri)
+            ?: return null
+
+        inputStream.use { input ->
+            coverFile.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        coverFile.absolutePath
+    } catch (_: Exception) {
+        null
     }
 }
