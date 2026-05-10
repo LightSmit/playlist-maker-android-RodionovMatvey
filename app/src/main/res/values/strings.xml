@@ -39,6 +39,11 @@
     <string name="playlist_menu">Меню плейлиста</string>
     <string name="playlist_duration_tracks_format">%1$s • %2$s</string>
 
+    <string name="delete_track_from_playlist_title">Удалить трек?</string>
+    <string name="delete_track_from_playlist_message">Трек будет удален из этого плейлиста.</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_cancel">Отмена</string>
+
     <plurals name="tracks_count">
         <item quantity="one">%d трек</item>
         <item quantity="few">%d трека</item>
@@ -58,7 +63,7 @@
     <string name="track_duration">Длительность</string>
 
     <string name="settings_title">Настройки</string>
-    <string name="dark_theme" translatable="false">Тёмная тема</string>
+    <string name="dark_theme" translatable="false">Темная тема</string>
     <string name="share_app">Поделиться приложением</string>
     <string name="write_to_support">Написать в поддержку</string>
     <string name="user_agreement">Пользовательское соглашение</string>
