@@ -1,3 +1,78 @@
 <resources>
     <string name="app_name">playlist-maker-android-RodionovMatvey</string>
+
+    <string name="main_title">Playlist maker</string>
+    <string name="action_back">Назад</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_create">Создать</string>
+    <string name="action_refresh">Обновить</string>
+    <string name="action_clear_search">Очистить поисковый запрос</string>
+    <string name="action_add_playlist">Добавить плейлист</string>
+    <string name="action_add_to_favorites">Добавить в избранное</string>
+    <string name="action_add_to_playlist">Добавить в плейлист</string>
+
+    <string name="screen_search">Поиск</string>
+    <string name="screen_songs">Songs</string>
+    <string name="screen_playlists">Плейлисты</string>
+    <string name="screen_favorites">Избранные треки</string>
+    <string name="screen_track_details">Track details</string>
+    <string name="screen_new_playlist">Новый плейлист</string>
+    <string name="screen_favorites_short">Избранное</string>
+
+    <string name="search_placeholder">Поиск</string>
+    <string name="search_history_title">Вы искали</string>
+    <string name="search_nothing_found">Ничего не нашлось</string>
+    <string name="search_connection_problem">Проблемы со связью</string>
+    <string name="search_loading_failed">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="search_enter_query">Введите строку для поиска</string>
+    <string name="search_error">Ошибка: %1$s</string>
+
+    <string name="playlist_name_label">Имя плейлиста</string>
+    <string name="playlist_description_label">Описание</string>
+    <string name="playlist_cover">Обложка плейлиста</string>
+    <string name="select_image">Выбрать изображение</string>
+    <string name="permission_required">Для выбора обложки необходимо разрешение на доступ к файлам</string>
+    <string name="playlist_empty_tracks">В плейлисте пока нет треков</string>
+    <string name="playlist_tracks_count">Треков: %1$d</string>
+
+    <string name="playlist_not_found">Плейлист не найден</string>
+    <string name="playlist_menu">Меню плейлиста</string>
+    <string name="playlist_duration_tracks_format">%1$s • %2$s</string>
+
+    <string name="delete_track_from_playlist_title">Удалить трек?</string>
+    <string name="delete_track_from_playlist_message">Трек будет удален из этого плейлиста.</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_cancel">Отмена</string>
+
+    <plurals name="tracks_count">
+        <item quantity="one">%d трек</item>
+        <item quantity="few">%d трека</item>
+        <item quantity="many">%d треков</item>
+        <item quantity="other">%d треков</item>
+    </plurals>
+
+    <plurals name="minutes_count">
+        <item quantity="one">%d минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минут</item>
+    </plurals>
+
+    <string name="favorites_empty">Ваша медиатека пуста</string>
+
+    <string name="track_duration">Длительность</string>
+
+    <string name="settings_title">Настройки</string>
+    <string name="dark_theme" translatable="false">Темная тема</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="write_to_support">Написать в поддержку</string>
+    <string name="user_agreement">Пользовательское соглашение</string>
+
+    <string name="share_message">Скачайте приложение Playlist Maker!</string>
+
+    <string name="support_email_address">Lighty163@yandex.ru</string>
+    <string name="support_email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="support_email_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+
+    <string name="offer_url">https://practicum.yandex.ru/legal-oferta/</string>
 </resources>
