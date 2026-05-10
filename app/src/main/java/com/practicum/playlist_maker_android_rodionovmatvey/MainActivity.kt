@@ -8,9 +8,9 @@ import androidx.navigation.compose.rememberNavController
 import com.practicum.playlist_maker_android_rodionovmatvey.ui.theme.PlaylistmakerandroidRodionovMatveyTheme
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Creator.init(applicationContext)
         enableEdgeToEdge()
         setContent {
             PlaylistmakerandroidRodionovMatveyTheme {

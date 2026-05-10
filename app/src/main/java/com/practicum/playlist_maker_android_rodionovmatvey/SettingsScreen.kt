@@ -3,7 +3,14 @@ package com.practicum.playlist_maker_android_rodionovmatvey
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
@@ -46,7 +53,8 @@ fun SettingsScreen(onBackClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .systemBarsPadding()
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -54,21 +62,22 @@ fun SettingsScreen(onBackClick: () -> Unit) {
                 .fillMaxWidth()
                 .height(56.dp)
         ) {
-            IconButton(onClick = { onBackClick() }) {
+            IconButton(onClick = onBackClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrowback),
-                    contentDescription = "Назад"
+                    contentDescription = stringResource(R.string.action_back)
                 )
             }
+
             Text(
                 text = title,
-                fontSize = 22.sp,
+                fontSize = 28.sp,
                 fontFamily = FontFamily(Font(R.font.yandex_sans_display_bold)),
                 modifier = Modifier.padding(start = 8.dp)
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Row(
             modifier = Modifier
@@ -81,6 +90,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
                 fontSize = 16.sp,
                 modifier = Modifier.weight(1f)
             )
+
             Switch(
                 checked = isDarkThemeEnabled,
                 onCheckedChange = { isDarkThemeEnabled = it }
@@ -106,9 +116,10 @@ fun SettingsScreen(onBackClick: () -> Unit) {
                 fontSize = 16.sp,
                 modifier = Modifier.weight(1f)
             )
+
             Icon(
                 painter = painterResource(id = R.drawable.ic_share),
-                contentDescription = "Поделиться"
+                contentDescription = stringResource(R.string.share_app)
             )
         }
 
@@ -131,9 +142,10 @@ fun SettingsScreen(onBackClick: () -> Unit) {
                 fontSize = 16.sp,
                 modifier = Modifier.weight(1f)
             )
+
             Icon(
                 painter = painterResource(id = R.drawable.ic_support),
-                contentDescription = "Написать в поддержку"
+                contentDescription = stringResource(R.string.write_to_support)
             )
         }
 
@@ -155,9 +167,10 @@ fun SettingsScreen(onBackClick: () -> Unit) {
                 fontSize = 16.sp,
                 modifier = Modifier.weight(1f)
             )
+
             Icon(
                 painter = painterResource(id = R.drawable.ic_chevron_right),
-                contentDescription = "Пользовательское соглашение"
+                contentDescription = stringResource(R.string.user_agreement)
             )
         }
     }
